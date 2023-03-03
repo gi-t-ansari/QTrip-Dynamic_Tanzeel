@@ -2,24 +2,60 @@
 import config from "../conf/index.js";
 
 //Implementation to extract city from query params
-function getCityFromURL(search) {
+
   // TODO: MODULE_ADVENTURES
   // 1. Extract the city id from the URL's Query Param and return it
+  let arr =[];
+  function getCityFromURL(search) {
+  let params=new URLSearchParams(search);
+  let city= params.get("city");
+  return city;
+  }
 
-}
+
 
 //Implementation of fetch call with a paramterized input based on city
 async function fetchAdventures(city) {
+    try{
+    let advCityFetch= await fetch(config.backendEndpoint + `/adventures?city=${city}`);
+    let advCity= await advCityFetch.json();
+    return advCity;
+    }
+    catch(e){
+    return null;
+    }
+    }
   // TODO: MODULE_ADVENTURES
   // 1. Fetch adventures using the Backend API and return the data
-
-}
 
 //Implementation of DOM manipulation to add adventures for the given city from list of adventures
 function addAdventureToDOM(adventures) {
   // TODO: MODULE_ADVENTURES
   // 1. Populate the Adventure Cards and insert those details into the DOM
-
+  adventures.forEach(element=>{
+    let cardElement= document.createElement("div");
+    cardElement.className="col-6 col-lg-3 mb-4";
+    cardElement.style="position:relative";
+    cardElement.innerHTML=`
+    <a href="/detail/?adventure=${element.id}" id=${element.id}>
+    <div class="category-banner">${element.category}</div>
+    <div class="activity-card">
+    <img scr=${element.image} class ="activity-card-image" class="card-img-top"/>
+    <div>
+    <div class="d-flex justify-content-between p-2 fs-5">
+    <h6 class="text-center">${element.name}</h6>
+    <h6> ₹${element.costPerHead}</h6>
+    </div>
+    <div class="d-flex justify-content-between p-2 fs-5">
+    <p class="text-center">Duration</p>
+    <p>${element.duration}hours</p>
+    </div>
+    </div>
+    </div>
+    </div>
+    </a>`;
+    document.getElementById("data").appendChild(cardElement);
+    });
 }
 
 //Implementation of filtering by duration which takes in a list of adventures, the lower bound and upper bound of duration and returns a filtered list of adventures.
